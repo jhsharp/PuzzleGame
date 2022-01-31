@@ -28,7 +28,6 @@ public class PlayerMagnet : PlayerBlock
 
     public override void activate()
     {
-        Debug.Log("Activate!");
         base.activate();
         if (core.playerBlocks.Contains(this)) core.magnetMoveStart(magnetDirectionVector);
     }

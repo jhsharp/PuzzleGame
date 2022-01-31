@@ -14,8 +14,8 @@ public class Block : MonoBehaviour
 
     internal bool stored = false;
 
-    internal Vector3 up = new Vector3(0, -1, 0);
-    internal Vector3 down = new Vector3(0, 1, 0);
+    internal Vector3 up = new Vector3(0, 1, 0);
+    internal Vector3 down = new Vector3(0, -1, 0);
     internal Vector3 left = new Vector3(-1, 0, 0);
     internal Vector3 right = new Vector3(1, 0, 0);
 

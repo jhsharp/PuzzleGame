@@ -8,7 +8,7 @@ public class PlayerCore : PlayerBlock
     public List<Block> tempConnections = new List<Block>();
 
     public float magnetMoveMultiplier = 1.005f;
-    public float magnetMoveSpeed = 0.2f;
+    public float magnetMoveSpeed = 0.4f;
 
     private string moveType = "magnet";
     private Vector3 moveDirection;
@@ -66,19 +66,19 @@ public class PlayerCore : PlayerBlock
     {
         foreach (PlayerBlock blk in playerBlocks)
         {
-            if (manager.checkBlock(blk.x + xShift, blk.y + yShift - 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift - 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1))) // up
+            if (manager.checkBlock(blk.x + xShift, blk.y + yShift - 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift - 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1))) // down
             {
                 tempConnections.Add(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1));
             }
-            if (manager.checkBlock(blk.x + xShift, blk.y + yShift + 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift + 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1))) // down
+            if (manager.checkBlock(blk.x + xShift, blk.y + yShift + 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift + 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1))) // up
             {
                 tempConnections.Add(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1));
             }
-            if (manager.checkBlock(blk.x + xShift - 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift - 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift))) // left
+            if (manager.checkBlock(blk.x + xShift - 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift - 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift))) // left
             {
                 tempConnections.Add(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift));
             }
-            if (manager.checkBlock(blk.x + xShift + 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift + 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift))) // right
+            if (manager.checkBlock(blk.x + xShift + 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift + 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift))) // right
             {
                 tempConnections.Add(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift));
             }
@@ -92,7 +92,7 @@ public class PlayerCore : PlayerBlock
         {
             foreach (PlayerBlock attachment in tempConnections)
             {
-                if (!playerBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed)) // moving up or down
+                if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime)) // moving up or down
                 {
                     newBlocks.Add(attachment);
                 }
@@ -178,7 +178,7 @@ public class PlayerCore : PlayerBlock
         moveType = "magnet";
         foreach (PlayerBlock blk in playerBlocks)
         {
-            moving = true;
+            blk.moving = true;
         }
     }
 
@@ -186,6 +186,7 @@ public class PlayerCore : PlayerBlock
     {
         foreach (PlayerBlock blk in playerBlocks)
         {
+            blk.moving = true;
             blk.transform.position += moveDirection * currentSpeed * Time.deltaTime;
         }
         attachBlocks();
