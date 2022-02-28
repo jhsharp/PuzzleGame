@@ -1,3 +1,13 @@
+/****
+ * Created by: Jacob Sharp
+ * Date Created: January 30, 2022
+ * 
+ * Last Edited by: Jacob Sharp
+ * Date Last Edited: February 28, 2022
+ * 
+ * Description: Base class for all player blocks
+ ****/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +16,8 @@ using UnityEngine.EventSystems;
 public class PlayerBlock : Block//, IPointerClickHandler
 {
     public bool moving = false;
-    public int targetX;
-    public int targetY;
+    //public int targetX;
+    //public int targetY;
 
     internal void Start()
     {

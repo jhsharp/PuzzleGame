@@ -1,3 +1,13 @@
+/****
+ * Created by: Jacob Sharp
+ * Date Created: January 30, 2022
+ * 
+ * Last Edited by: Jacob Sharp
+ * Date Last Edited: January 30, 2022
+ * 
+ * Description: Basic class for all block types
+ ****/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,8 +49,8 @@ public class Block : MonoBehaviour
 
         /* ADD CODE HERE */
 
-        // Set Position
-        x = (int)Mathf.Floor((transform.position.x - manager.transform.position.x) / manager.blockSize);
+// Set Position
+x = (int)Mathf.Floor((transform.position.x - manager.transform.position.x) / manager.blockSize);
         y = (int)Mathf.Floor((transform.position.y - manager.transform.position.y) / manager.blockSize);
 
         if (fixedPosition)

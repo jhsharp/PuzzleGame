@@ -1,3 +1,13 @@
+/****
+ * Created by: Jacob Sharp
+ * Date Created: January 30, 2022
+ * 
+ * Last Edited by: Jacob Sharp
+ * Date Last Edited: January 30, 2022
+ * 
+ * Description: Keeps track of all blocks in the level
+ ****/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

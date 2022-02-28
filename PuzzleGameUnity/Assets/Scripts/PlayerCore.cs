@@ -1,3 +1,13 @@
+/****
+ * Created by: Jacob Sharp
+ * Date Created: January 30, 2022
+ * 
+ * Last Edited by: Jacob Sharp
+ * Date Last Edited: February 28, 2022
+ * 
+ * Description: Block type that manages all other player blocks
+ ****/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
