@@ -20,6 +20,8 @@ public class PlayerCore : PlayerBlock
     public float magnetMoveMultiplier = 1.005f;
     public float magnetMoveSpeed = 0.4f;
 
+    public float pistonMoveSpeed = 0.75f;
+
     private string moveType = "magnet";
     private Vector3 moveDirection;
     private int moveDirectionSign;
@@ -48,6 +50,7 @@ public class PlayerCore : PlayerBlock
         if ((targetX - transform.position.x) * moveDirectionSign > moveBuffer  || (targetY - transform.position.y) * moveDirectionSign > moveBuffer)
         {
             if (moveType == "magnet") magnetMove();
+            else if (moveType == "piston") pistonMove();
         }
         else if (moving)
         {
@@ -56,6 +59,7 @@ public class PlayerCore : PlayerBlock
                 blk.transform.position = new Vector3(targetX + (blk.x - x) * manager.blockSize, targetY + (blk.y - y) * manager.blockSize);
                 blk.moving = false;
             }
+            attachBlocks();
         }
     }
 
@@ -126,6 +130,14 @@ public class PlayerCore : PlayerBlock
         }
     }
 
+    public void freezeBlocks(bool freeze)
+    {
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            blk.moving = freeze;
+        }
+    }
+
 
     public void targetMoveHorizontal(int distance)
     {
@@ -173,7 +185,7 @@ public class PlayerCore : PlayerBlock
 
     public void magnetMoveStart(Vector3 direction)
     {
-       moveDirection = direction;
+        moveDirection = direction;
         if (direction.x != 0)
         {
             moveDirectionSign = (int)direction.x;
@@ -201,5 +213,36 @@ public class PlayerCore : PlayerBlock
         }
         attachBlocks();
         currentSpeed *= magnetMoveMultiplier;
+    }
+
+    public void pistonMoveStart(Vector3 direction)
+    {
+        moveDirection = direction;
+        if (direction.x != 0)
+        {
+            moveDirectionSign = (int)direction.x;
+            targetMoveHorizontal(moveDirectionSign);
+        }
+        else
+        {
+            moveDirectionSign = (int)direction.y;
+            targetMoveVertical(moveDirectionSign);
+        }
+        currentSpeed = pistonMoveSpeed;
+        moveType = "piston";
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            blk.moving = true;
+        }
+    }
+
+    public void pistonMove()
+    {
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            blk.moving = true;
+            blk.transform.position += moveDirection * currentSpeed * Time.deltaTime;
+        }
+        attachBlocks();
     }
 }
