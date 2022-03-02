@@ -3,7 +3,7 @@
  * Date Created: January 30, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: February 28, 2022
+ * Date Last Edited: March 2, 2022
  * 
  * Description: Base class for all player blocks
  ****/
@@ -16,6 +16,7 @@ using UnityEngine.EventSystems;
 public class PlayerBlock : Block//, IPointerClickHandler
 {
     public bool moving = false;
+    public bool frozen = false;
     //public int targetX;
     //public int targetY;
 
@@ -43,7 +44,7 @@ public class PlayerBlock : Block//, IPointerClickHandler
 
     public void OnMouseOver()
     {
-        if (!moving)
+        if (!moving && !frozen)
         {
             if (Input.GetMouseButtonDown(0)) activate();
             else if (Input.GetMouseButtonDown(1)) deactivate();

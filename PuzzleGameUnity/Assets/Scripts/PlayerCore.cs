@@ -134,7 +134,7 @@ public class PlayerCore : PlayerBlock
     {
         foreach (PlayerBlock blk in playerBlocks)
         {
-            blk.moving = freeze;
+            blk.frozen = freeze;
         }
     }
 
@@ -215,25 +215,32 @@ public class PlayerCore : PlayerBlock
         currentSpeed *= magnetMoveMultiplier;
     }
 
-    public void pistonMoveStart(Vector3 direction)
+    public bool pistonMoveStart(Vector3 direction) // attempts to push off a block with the activated piston and returns whether the player has space to be pushed into
     {
+        bool pistonMove = true;
         moveDirection = direction;
         if (direction.x != 0)
         {
             moveDirectionSign = (int)direction.x;
             targetMoveHorizontal(moveDirectionSign);
+            if (Mathf.Abs(targetX - transform.position.x) < 0.01) pistonMove = false;
         }
         else
         {
             moveDirectionSign = (int)direction.y;
             targetMoveVertical(moveDirectionSign);
+            if (Mathf.Abs(targetY - transform.position.y) < 0.01) pistonMove = false;
         }
-        currentSpeed = pistonMoveSpeed;
-        moveType = "piston";
-        foreach (PlayerBlock blk in playerBlocks)
+        if (pistonMove)
         {
-            blk.moving = true;
+            currentSpeed = pistonMoveSpeed;
+            moveType = "piston";
+            foreach (PlayerBlock blk in playerBlocks)
+            {
+                blk.moving = true;
+            }
         }
+        return pistonMove;
     }
 
     public void pistonMove()
