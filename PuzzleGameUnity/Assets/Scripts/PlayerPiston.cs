@@ -3,7 +3,7 @@
  * Date Created: February 28, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: March 2, 2022
+ * Date Last Edited: March 4, 2022
  * 
  * Description: Manages the extension and retraction of piston blocks
  ****/
@@ -23,7 +23,7 @@ public class PlayerPiston : PlayerBlock
     public GameObject[] armSegments;
 
     private PlayerCore core;
-    private Vector3 pistonDirectionVector;
+    [HideInInspector] public Vector3 pistonDirectionVector;
 
     private float moveSpeed;
     private Vector3 targetPos;
@@ -52,7 +52,7 @@ public class PlayerPiston : PlayerBlock
         if (extending)
         {
             pistonExtend();
-            if (Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < (moveSpeed * Time.deltaTime) && Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < (moveSpeed * Time.deltaTime))
+            if (Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < (moveSpeed * Time.deltaTime) && Mathf.Abs(armParent.transform.localPosition.y - targetPos.y) < (moveSpeed * Time.deltaTime))
             {
                 armParent.transform.localPosition = targetPos;
                 core.freezeBlocks(false);
@@ -62,8 +62,9 @@ public class PlayerPiston : PlayerBlock
         if (retracting)
         {
             pistonRetract();
-            if (Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < moveSpeed && Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < moveSpeed)
+            if (Mathf.Abs(armParent.transform.localPosition.x - targetPos.x) < (moveSpeed * Time.deltaTime) && Mathf.Abs(armParent.transform.localPosition.y - targetPos.y) < (moveSpeed * Time.deltaTime))
             {
+                armSegments[extension].SetActive(false);
                 armParent.transform.localPosition = targetPos;
                 core.freezeBlocks(false);
                 retracting = false;
@@ -72,7 +73,11 @@ public class PlayerPiston : PlayerBlock
         if (armMoving)
         {
             pistonMoveArm();
-            if (!moving) armMoving = false;
+            if (!moving)
+            {
+                armMoving = false;
+                armParent.transform.localPosition = extension * pistonDirectionVector * manager.blockSize; // Reset local position to be exact
+            }
         }
     }
 
@@ -95,7 +100,11 @@ public class PlayerPiston : PlayerBlock
                 else // otherwise attempt to push off of the wall
                 {
                     if (core.pistonMoveStart(-pistonDirectionVector)) pistonMoveArmStart();
-                    ;
+                    else // if the player is blocked, don't extend the piston
+                    {
+                        extension--;
+                        armSegments[extension].SetActive(false);
+                    }
                 }
             }
             else // if there is no block in the way of the pison, extend the arm
@@ -111,7 +120,6 @@ public class PlayerPiston : PlayerBlock
         if (core.playerBlocks.Contains(this) && extension > 0)
         {
             extension--;
-            armSegments[extension].SetActive(false);
             pistonRetractStart();
         }
     }
@@ -125,6 +133,7 @@ public class PlayerPiston : PlayerBlock
     public void pistonExtend()
     {
         armParent.transform.localPosition += pistonDirectionVector * moveSpeed * Time.deltaTime;
+        
     }
 
     public void pistonRetractStart()

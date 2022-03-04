@@ -3,7 +3,7 @@
  * Date Created: January 30, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: February 28, 2022
+ * Date Last Edited: March 4, 2022
  * 
  * Description: Block type that manages all other player blocks
  ****/
@@ -60,17 +60,23 @@ public class PlayerCore : PlayerBlock
                 blk.moving = false;
             }
             attachBlocks();
+            updateManagerPositions();
         }
     }
 
-    public bool checkCollision(int xShift, int yShift)
+    public bool checkCollision(int xShift, int yShift) // returns whether the player can move the specified amount without a collision
     {
         foreach (PlayerBlock blk in playerBlocks)
         {
-            if (manager.checkBlock(blk.x + xShift, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift).type != "player") return true;
-            if (blk.type == "piston")
+            if (manager.checkBlock(blk.x + xShift, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift).type != "player") return true; // check the target location of each block for a collision
+            if (blk.gameObject.GetComponent<PlayerPiston>() != null) // check for piston arm collisions
             {
-                /* CHECK PISTON COLLISIONS */
+                PlayerPiston piston = (PlayerPiston)blk;
+                for (int i = 1; i <= piston.extension; i++)
+                {
+                    Debug.Log("Checking (" + (blk.x + xShift + i * (int)piston.pistonDirectionVector.x) + ", " + (blk.y + yShift + i * (int)piston.pistonDirectionVector.y) + ")");
+                    if (manager.checkBlock(blk.x + xShift + i * (int)piston.pistonDirectionVector.x, blk.y + yShift + i*(int)piston.pistonDirectionVector.y) != null && manager.checkBlock(blk.x + xShift + i * (int)piston.pistonDirectionVector.x, blk.y + yShift + i * (int)piston.pistonDirectionVector.y).type != "player") return true;
+                }
             }
         }
         return false;
@@ -106,7 +112,7 @@ public class PlayerCore : PlayerBlock
         {
             foreach (PlayerBlock attachment in tempConnections)
             {
-                if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime)) // moving up or down
+                if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime + 0.001)) // moving up or down
                 {
                     newBlocks.Add(attachment);
                 }
@@ -127,6 +133,14 @@ public class PlayerCore : PlayerBlock
         foreach (PlayerBlock blk in playerBlocks)
         {
             blk.transform.position = new Vector3(transform.position.x + (blk.x - x) * manager.blockSize, transform.position.y + (blk.y - y) * manager.blockSize);
+        }
+    }
+
+    public void updateManagerPositions()
+    {
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            manager.moveBlock(blk.x, blk.y, blk);
         }
     }
 
