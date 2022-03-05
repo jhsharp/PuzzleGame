@@ -47,10 +47,8 @@ public class Block : MonoBehaviour
             manager.storeBlock(x, y, this);
         }
 
-        /* ADD CODE HERE */
-
-// Set Position
-x = (int)Mathf.Floor((transform.position.x - manager.transform.position.x) / manager.blockSize);
+        // Set Position
+        x = (int)Mathf.Floor((transform.position.x - manager.transform.position.x) / manager.blockSize);
         y = (int)Mathf.Floor((transform.position.y - manager.transform.position.y) / manager.blockSize);
 
         if (fixedPosition)

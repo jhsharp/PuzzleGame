@@ -66,7 +66,7 @@ public class PlayerCore : PlayerBlock
 
     public bool checkCollision(int xShift, int yShift) // returns whether the player can move the specified amount without a collision
     {
-        foreach (PlayerBlock blk in playerBlocks)
+        foreach (PlayerBlock blk in playerBlocks) // check for currently connected blocks
         {
             if (manager.checkBlock(blk.x + xShift, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift).type != "player") return true; // check the target location of each block for a collision
             if (blk.gameObject.GetComponent<PlayerPiston>() != null) // check for piston arm collisions
@@ -74,33 +74,52 @@ public class PlayerCore : PlayerBlock
                 PlayerPiston piston = (PlayerPiston)blk;
                 for (int i = 1; i <= piston.extension; i++)
                 {
-                    Debug.Log("Checking (" + (blk.x + xShift + i * (int)piston.pistonDirectionVector.x) + ", " + (blk.y + yShift + i * (int)piston.pistonDirectionVector.y) + ")");
                     if (manager.checkBlock(blk.x + xShift + i * (int)piston.pistonDirectionVector.x, blk.y + yShift + i*(int)piston.pistonDirectionVector.y) != null && manager.checkBlock(blk.x + xShift + i * (int)piston.pistonDirectionVector.x, blk.y + yShift + i * (int)piston.pistonDirectionVector.y).type != "player") return true;
                 }
             }
         }
-        return false;
+        foreach (PlayerBlock blk in tempConnections) // check for blocks that will eventually be connected
+        {
+            if (xShift != 0) // if moving horizonatlly
+            {
+                if (manager.checkBlock(blk.x + xShift - blk.tempOffset, blk.y) != null && manager.checkBlock(blk.x + xShift - blk.tempOffset, blk.y).type != "player") return true;
+            }
+            else if (yShift != 0) // if moving vertically
+            {
+                if (manager.checkBlock(blk.x, blk.y + yShift - blk.tempOffset) != null && manager.checkBlock(blk.x, blk.y + yShift - blk.tempOffset).type != "player") return true;
+            }
+        }
+        return false; // indicate if there were no collisions
     }
 
     public void checkConnections(int xShift, int yShift)
     {
+        PlayerBlock currentConnection;
         foreach (PlayerBlock blk in playerBlocks)
         {
             if (manager.checkBlock(blk.x + xShift, blk.y + yShift - 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift - 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1))) // down
             {
-                tempConnections.Add(manager.checkBlock(blk.x + xShift, blk.y + yShift - 1));
+                currentConnection = (PlayerBlock)manager.checkBlock(blk.x + xShift, blk.y + yShift - 1);
+                tempConnections.Add(currentConnection);
+                currentConnection.tempOffset = yShift;
             }
             if (manager.checkBlock(blk.x + xShift, blk.y + yShift + 1) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift + 1).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1))) // up
             {
-                tempConnections.Add(manager.checkBlock(blk.x + xShift, blk.y + yShift + 1));
+                currentConnection = (PlayerBlock)manager.checkBlock(blk.x + xShift, blk.y + yShift + 1);
+                tempConnections.Add(currentConnection);
+                currentConnection.tempOffset = yShift;
             }
             if (manager.checkBlock(blk.x + xShift - 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift - 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift))) // left
             {
-                tempConnections.Add(manager.checkBlock(blk.x + xShift - 1, blk.y + yShift));
+                currentConnection = (PlayerBlock)manager.checkBlock(blk.x + xShift - 1, blk.y + yShift);
+                tempConnections.Add(currentConnection);
+                currentConnection.tempOffset = xShift;
             }
             if (manager.checkBlock(blk.x + xShift + 1, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift + 1, blk.y + yShift).type == "player" && !playerBlocks.Contains(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift)) && !tempConnections.Contains(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift))) // right
             {
-                tempConnections.Add(manager.checkBlock(blk.x + xShift + 1, blk.y + yShift));
+                currentConnection = (PlayerBlock)manager.checkBlock(blk.x + xShift + 1, blk.y + yShift);
+                tempConnections.Add(currentConnection);
+                currentConnection.tempOffset = xShift;
             }
         }
     }
@@ -115,6 +134,7 @@ public class PlayerCore : PlayerBlock
                 if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime + 0.001)) // moving up or down
                 {
                     newBlocks.Add(attachment);
+                    attachment.tempOffset = 0;
                 }
 
             }

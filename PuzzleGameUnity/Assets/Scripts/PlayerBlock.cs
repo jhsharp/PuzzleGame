@@ -15,10 +15,10 @@ using UnityEngine.EventSystems;
 
 public class PlayerBlock : Block//, IPointerClickHandler
 {
-    public bool moving = false;
-    public bool frozen = false;
-    //public int targetX;
-    //public int targetY;
+    public bool moving = false; // indicates whether the block is currently in motion
+    public bool frozen = false; // can be used to stop the block from activating/deactivating
+
+    [HideInInspector] public int tempOffset = 0; // variable used when connecting blocks over long distances to avoid pushing them into walls
 
     internal void Start()
     {
@@ -31,16 +31,6 @@ public class PlayerBlock : Block//, IPointerClickHandler
         if (moving) fixedPosition = false;
         else fixedPosition = true;
     }
-
-    /*public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("Activate!");
-        if (!moving)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left) activate();
-            else if (eventData.button == PointerEventData.InputButton.Right) deactivate();
-        }
-    }*/
 
     public void OnMouseOver()
     {
