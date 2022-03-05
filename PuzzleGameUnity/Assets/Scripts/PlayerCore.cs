@@ -30,7 +30,7 @@ public class PlayerCore : PlayerBlock
     private float targetY;
     private float moveBuffer = 0.04f;
     private bool collide = false;
-    private int initialAttach = 3;
+    private int initialAttach = 10;
 
     void Start()
     {
@@ -59,6 +59,7 @@ public class PlayerCore : PlayerBlock
                 blk.transform.position = new Vector3(targetX + (blk.x - x) * manager.blockSize, targetY + (blk.y - y) * manager.blockSize);
                 blk.moving = false;
             }
+            checkConnections(0, 0);
             attachBlocks();
             updateManagerPositions();
         }
@@ -92,7 +93,7 @@ public class PlayerCore : PlayerBlock
         return false; // indicate if there were no collisions
     }
 
-    public void checkConnections(int xShift, int yShift)
+    public void checkConnections(int xShift, int yShift) // checks connections when the player is stationary (checks in all directions)
     {
         PlayerBlock currentConnection;
         foreach (PlayerBlock blk in playerBlocks)
@@ -124,14 +125,30 @@ public class PlayerCore : PlayerBlock
         }
     }
 
-    public void attachBlocks()
+    public void checkConnectionsMotion(int xShift, int yShift) // checks connections when the player is in motion (only checks in direction of motion)
+    {
+        PlayerBlock currentConnection;
+        Block checkBlock;
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            checkBlock = manager.checkBlock(blk.x + xShift + (int)moveDirection.x, blk.y + yShift + (int)moveDirection.y);
+            if (checkBlock != null && checkBlock.type == "player" && !playerBlocks.Contains(checkBlock) && !tempConnections.Contains(checkBlock))
+            {
+                currentConnection = (PlayerBlock)checkBlock;
+                tempConnections.Add(currentConnection);
+                currentConnection.tempOffset = yShift;
+            }
+        }
+    }
+
+    public void attachBlocks() // attaches blocks when the player is stationary (attaches in all directions)
     {
         List<PlayerBlock> newBlocks = new List<PlayerBlock>();
         foreach (PlayerBlock blk in playerBlocks)
         {
             foreach (PlayerBlock attachment in tempConnections)
             {
-                if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime + 0.001)) // moving up or down
+                if (!newBlocks.Contains(attachment) && Vector3.Distance(blk.transform.position, attachment.transform.position) <= (manager.blockSize + currentSpeed * Time.deltaTime + 0.001))
                 {
                     newBlocks.Add(attachment);
                     attachment.tempOffset = 0;
@@ -144,8 +161,30 @@ public class PlayerCore : PlayerBlock
                 playerBlocks.Add(blk);
                 tempConnections.Remove(blk);
                 resetPositions();
+        }   
+    }
+
+    public void attachBlocksMotion() // attaches blocks when the player is moving (only attaches in the direction of motion)
+    {
+        List<PlayerBlock> newBlocks = new List<PlayerBlock>();
+        foreach (PlayerBlock blk in playerBlocks)
+        {
+            foreach (PlayerBlock attachment in tempConnections)
+            {
+                if (!newBlocks.Contains(attachment) && (Mathf.Abs(blk.transform.position.x - attachment.transform.position.x) <= (moveDirection.x*(manager.blockSize + currentSpeed * Time.deltaTime) + 0.001)) && (Mathf.Abs(blk.transform.position.y - attachment.transform.position.y) <= (moveDirection.y * (manager.blockSize + currentSpeed * Time.deltaTime) + 0.001)))
+                {
+                    newBlocks.Add(attachment);
+                    attachment.tempOffset = 0;
+                }
+
+            }
         }
-        
+        foreach (PlayerBlock blk in newBlocks)
+        {
+            playerBlocks.Add(blk);
+            tempConnections.Remove(blk);
+            resetPositions();
+        }
     }
 
     public void resetPositions()
@@ -189,7 +228,7 @@ public class PlayerCore : PlayerBlock
                 xShift -= 1;
                 collide = true;
             }
-            checkConnections(xShift * direction, 0);
+            checkConnectionsMotion(xShift * direction, 0);
         }
         targetX = (x + xShift * direction) * manager.blockSize + manager.transform.position.x + manager.blockSize / 2;
         targetY = transform.position.y;
@@ -211,7 +250,7 @@ public class PlayerCore : PlayerBlock
                 yShift -= 1;
                 collide = true;
             }
-            checkConnections(0, yShift * direction);
+            checkConnectionsMotion(0, yShift * direction);
         }
         targetY = (y + yShift * direction) * manager.blockSize + manager.transform.position.x + manager.blockSize / 2;
         targetX = transform.position.x;
@@ -245,7 +284,7 @@ public class PlayerCore : PlayerBlock
             blk.moving = true;
             blk.transform.position += moveDirection * currentSpeed * Time.deltaTime;
         }
-        attachBlocks();
+        attachBlocksMotion();
         currentSpeed *= magnetMoveMultiplier;
     }
 
@@ -284,6 +323,6 @@ public class PlayerCore : PlayerBlock
             blk.moving = true;
             blk.transform.position += moveDirection * currentSpeed * Time.deltaTime;
         }
-        attachBlocks();
+        attachBlocksMotion();
     }
 }
