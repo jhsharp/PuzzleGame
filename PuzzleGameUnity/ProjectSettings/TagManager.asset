@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 51713121
+    locked: 0
   - name: PistonArms
     uniqueID: 3974966295
     locked: 0

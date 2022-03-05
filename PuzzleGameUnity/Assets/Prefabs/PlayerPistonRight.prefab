@@ -217,6 +217,8 @@ MonoBehaviour:
   x: 0
   y: 0
   moving: 0
+  frozen: 0
+  tempOffset: 0
   pistonDirection: 1
   extension: 0
   extensionMax: 3
@@ -225,6 +227,7 @@ MonoBehaviour:
   - {fileID: 6606862221167789223}
   - {fileID: 2516537454814475069}
   - {fileID: 7476709298742131680}
+  pistonDirectionVector: {x: 0, y: 0, z: 0}
 --- !u!61 &4706808904578953616
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -322,7 +325,7 @@ SpriteRenderer:
   m_SortingLayerID: -320001001
   m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d993341fb11d86241b90dedb209bb11e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 703e2685ffa1a9748833d34e35cc20c9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

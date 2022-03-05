@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: -320001001
   m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 551d3d30e405f6543ae0c9d6f48e7c64, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0e88c87feb16eec44bc1f4223179a4a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -299,6 +299,8 @@ MonoBehaviour:
   x: 0
   y: 0
   moving: 0
+  frozen: 0
+  tempOffset: 0
   pistonDirection: 2
   extension: 0
   extensionMax: 3
@@ -307,6 +309,7 @@ MonoBehaviour:
   - {fileID: 631692673014509095}
   - {fileID: 8488323783984005898}
   - {fileID: 2258975380571958097}
+  pistonDirectionVector: {x: 0, y: 0, z: 0}
 --- !u!61 &6294839713684202959
 BoxCollider2D:
   m_ObjectHideFlags: 0
