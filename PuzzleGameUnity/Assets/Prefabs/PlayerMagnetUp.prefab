@@ -101,8 +101,8 @@ MonoBehaviour:
   x: 0
   y: 0
   moving: 0
-  targetX: 0
-  targetY: 0
+  frozen: 0
+  tempOffset: 0
   magnetDirection: 0
 --- !u!61 &1261951302258832216
 BoxCollider2D:

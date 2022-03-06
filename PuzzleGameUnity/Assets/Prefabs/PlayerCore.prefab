@@ -102,6 +102,7 @@ MonoBehaviour:
   y: 0
   moving: 0
   frozen: 0
+  tempOffset: 0
   playerBlocks: []
   tempConnections: []
   magnetMoveMultiplier: 1.005
