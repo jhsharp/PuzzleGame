@@ -2,8 +2,8 @@
  * Created by: Akram Taghavi-Burrs
  * Date Created: Feb 23, 2022
  * 
- * Last Edited by: NA
- * Last Edited: Feb 23, 2022
+ * Last Edited by: Jacob Sharp
+ * Last Edited: March 6, 2022
  * 
  * Description: Updates start canvas referecing game manager
 ****/
@@ -42,11 +42,11 @@ public class StartCanvas : MonoBehaviour
 
     public void GameContinue()
     {
-        if (PlayerPrefs.HasKey("Current Level"))
+        if (PlayerPrefs.HasKey("Current Level")) // load the level if there is a stored level
         {
             gm.LoadGame();
         }
-        else GameStart();
+        else GameStart(); // otherwise start a new game
     }
 
    public void GameExit()

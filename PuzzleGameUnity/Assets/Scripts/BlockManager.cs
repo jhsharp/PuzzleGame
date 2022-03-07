@@ -14,14 +14,14 @@ using UnityEngine;
 
 public class BlockManager : MonoBehaviour
 {
-    public float blockSize;
-    public int roomWidth;
-    public int roomHeight;
-    public Block[,] blockGrid;
+    public float blockSize; // size of block objects
+    public int roomWidth; // room width in terms of block count
+    public int roomHeight; // room height in terms of block count
+    public Block[,] blockGrid; // grid that keeps track of all block loactions
 
-    // Start is called before the first frame update
     void Start()
     {
+        // Create an empty grid for blocks to be stored in
         blockGrid = new Block[roomWidth, roomHeight];
         for (int i = 0; i < roomWidth; i++)
         {
@@ -32,18 +32,12 @@ public class BlockManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void storeBlock(int x, int y, Block block)
+    public void storeBlock(int x, int y, Block block) // store the specified block at the specified position in the grid
     {
         blockGrid[x, y] = block;
     }
 
-    public void clearBlock(Block block)
+    public void clearBlock(Block block) // remove the specified block from the grid
     {
         for (int i = 0; i < roomWidth; i++)
         {
@@ -54,13 +48,13 @@ public class BlockManager : MonoBehaviour
         }
     }
 
-    public void moveBlock(int x, int y, Block block)
+    public void moveBlock(int x, int y, Block block) // move a block from its current location to the specified position in the grid
     {
         clearBlock(block);
         storeBlock(x, y, block);
     }
 
-    public Block checkBlock(int x, int y)
+    public Block checkBlock(int x, int y) // return the block in the specified position in the grid
     {
         if (blockGrid[x, y] == null) return null;
         else return blockGrid[x, y];

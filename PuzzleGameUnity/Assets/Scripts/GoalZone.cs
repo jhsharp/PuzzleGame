@@ -17,14 +17,15 @@ public class GoalZone : MonoBehaviour
 {
     //public string nextScene; // the scene to move to upon level completion
 
-    private int xMin, xMax, yMin, yMax;
-    private bool transitioning;
+    private int xMin, xMax, yMin, yMax; // bounds of the goal zone
+
+    private bool transitioning; // variables to manage the transition time between levels
     private float transitionTimer;
     public float transitionDelay;
 
-    private Collider2D col;
-    private BlockManager manager;
-    private PlayerCore core;
+    private Collider2D col; // reference to collider
+    private BlockManager manager; // reference to block manager
+    private PlayerCore core; // reference to player core
 
     void Start()
     {
@@ -64,9 +65,8 @@ public class GoalZone : MonoBehaviour
 
     private void transition() // manages the transition process to the next stage
     {
-        if (transitionTimer <= 0)
+        if (transitionTimer <= 0) // if the transition time has elapsed, go to next level
         {
-            // switch scenes
             GameManager.GM.NextLevel();
         }
         else transitionTimer -= Time.deltaTime; // otherwise continue counting down to the scene switch

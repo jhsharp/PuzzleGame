@@ -3,7 +3,7 @@
  * Date Created: Feb 23, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: March 6, 2022
+ * Date Last Edited: March 7, 2022
  * 
  * Description: GameManager object for the entire game
 ****/
@@ -232,8 +232,8 @@ public class GameManager : MonoBehaviour
     public void LoadGame()
     {
         nextLevel = true;
-        StartGame();
-        gameLevelsCount = PlayerPrefs.GetInt("Current Level") - 1;
+        StartGame(); // initialize game stats
+        gameLevelsCount = PlayerPrefs.GetInt("Current Level") - 1; // set level
         NextLevel();
     }
 

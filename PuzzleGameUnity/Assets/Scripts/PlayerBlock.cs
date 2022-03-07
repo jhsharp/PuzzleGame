@@ -28,16 +28,19 @@ public class PlayerBlock : Block//, IPointerClickHandler
     internal void Update()
     {
         base.Update();
+
+        // Set whether the block should be fixed into position or not
         if (moving) fixedPosition = false;
         else fixedPosition = true;
     }
 
     public void OnMouseOver()
     {
+        // Manage activation/deactivation when the player can be interacted with
         if (!moving && !frozen)
         {
-            if (Input.GetMouseButtonDown(0)) activate();
-            else if (Input.GetMouseButtonDown(1)) deactivate();
+            if (Input.GetMouseButtonDown(0)) activate(); // activate on left click
+            else if (Input.GetMouseButtonDown(1)) deactivate(); // deactivate on right click
         }
     }
 
