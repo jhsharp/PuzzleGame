@@ -3,7 +3,7 @@
  * Date Created: Feb 23, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Last Edited: March 6, 2022
+ * Last Edited: March 7, 2022
  * 
  * Description: Updates HUD canvas referecing game manager
 ****/
@@ -26,7 +26,7 @@ public class HUDCanvas : MonoBehaviour
     
     //GM Data
     private int level;
-    //private int totalLevels;
+    private int totalLevels;
     private int moves;
     private int bestMoves;
 
@@ -36,7 +36,7 @@ public class HUDCanvas : MonoBehaviour
 
         //reference to level info
         level = gm.gameLevelsCount;
-        //totalLevels = gm.gameLevels.Length;
+        totalLevels = gm.gameLevels.Length;
 
 
 
@@ -59,7 +59,7 @@ public class HUDCanvas : MonoBehaviour
     void SetHUD()
     {
         //if texbox exsists update value
-        if (levelTextbox) { levelTextbox.text = "Level " + level/* + "/" + totalLevels*/; }
+        if (levelTextbox) { levelTextbox.text = "Level " + level + "/" + totalLevels; }
         if (movesTextbox) { movesTextbox.text = "Moves:  " + moves; }
         if (bestMovesTextbox) { bestMovesTextbox.text = "Best: " + bestMoves; }
 
