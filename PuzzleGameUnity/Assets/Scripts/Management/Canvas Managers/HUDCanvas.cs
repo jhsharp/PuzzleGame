@@ -2,8 +2,8 @@
  * Created by: Akram Taghavi-Burrs
  * Date Created: Feb 23, 2022
  * 
- * Last Edited by: NA
- * Last Edited: Feb 23, 2022
+ * Last Edited by: Jacob Sharp
+ * Last Edited: March 6, 2022
  * 
  * Description: Updates HUD canvas referecing game manager
 ****/
@@ -21,24 +21,22 @@ public class HUDCanvas : MonoBehaviour
 
     [Header("Canvas SETTINGS")]
     public Text levelTextbox; //textbox for level count
-    public Text livesTextbox; //textbox for the lives
-    public Text scoreTextbox; //textbox for the score
-    public Text highScoreTextbox; //textbox for highscore
+    public Text movesTextbox; //textbox for the moves
+    public Text bestMovesTextbox; //textbox for best moves
     
     //GM Data
     private int level;
-    private int totalLevels;
-    private int lives;
-    private int score;
-    private int highscore;
+    //private int totalLevels;
+    private int moves;
+    private int bestMoves;
 
     private void Start()
     {
         gm = GameManager.GM; //find the game manager
 
-        //reference to levle info
+        //reference to level info
         level = gm.gameLevelsCount;
-        totalLevels = gm.gameLevels.Length;
+        //totalLevels = gm.gameLevels.Length;
 
 
 
@@ -54,18 +52,16 @@ public class HUDCanvas : MonoBehaviour
 
     void GetGameStats()
     {
-        lives = gm.Lives;
-        score = gm.Score;
-        highscore = gm.HighScore;
+        moves = gm.Moves;
+        bestMoves = gm.BestMoves;
     }
 
     void SetHUD()
     {
         //if texbox exsists update value
-        if (levelTextbox) { levelTextbox.text = "Level " + level + "/" + totalLevels; }
-        if (livesTextbox) { livesTextbox.text = "Lives " + lives; }
-        if (scoreTextbox) { scoreTextbox.text = "Score " + score; }
-        if (highScoreTextbox) { highScoreTextbox.text = "High Score " + highscore; }
+        if (levelTextbox) { levelTextbox.text = "Level " + level/* + "/" + totalLevels*/; }
+        if (movesTextbox) { movesTextbox.text = "Moves:  " + moves; }
+        if (bestMovesTextbox) { bestMovesTextbox.text = "Best: " + bestMoves; }
 
     }//end SetHUD()
 

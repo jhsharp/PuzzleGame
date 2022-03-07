@@ -3,7 +3,7 @@
  * Date Created: March 5, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: March 5, 2022
+ * Date Last Edited: March 6, 2022
  * 
  * Description: Controls the goal zone to move to the next level
  ****/
@@ -15,7 +15,7 @@ using UnityEngine;
 
 public class GoalZone : MonoBehaviour
 {
-    public string nextScene; // the scene to move to upon level completion
+    //public string nextScene; // the scene to move to upon level completion
 
     private int xMin, xMax, yMin, yMax;
     private bool transitioning;
@@ -67,7 +67,7 @@ public class GoalZone : MonoBehaviour
         if (transitionTimer <= 0)
         {
             // switch scenes
-            Debug.Log("DONE!!!");
+            GameManager.GM.NextLevel();
         }
         else transitionTimer -= Time.deltaTime; // otherwise continue counting down to the scene switch
     }

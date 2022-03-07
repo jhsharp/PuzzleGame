@@ -34,12 +34,19 @@ public class StartCanvas : MonoBehaviour
          copyrightTextbox.text = gm.copyrightDate;
     }
 
-
-
-   public void GameStart()
+    public void GameStart()
     {
         gm.StartGame(); //refenece the StartGame method on the game manager
 
+    }
+
+    public void GameContinue()
+    {
+        if (PlayerPrefs.HasKey("Current Level"))
+        {
+            gm.LoadGame();
+        }
+        else GameStart();
     }
 
    public void GameExit()

@@ -2,10 +2,10 @@
  * Created by: Akram Taghavi-Burrs
  * Date Created: Feb 23, 2022
  * 
- * Last Edited by: NA
- * Last Edited: Feb 23, 2022
+ * Last Edited by: Jacob Sharp
+ * Date Last Edited: March 6, 2022
  * 
- * Description: Basic GameManager Template
+ * Description: GameManager object for the entire game
 ****/
 
 /** Import Libraries **/
@@ -51,33 +51,21 @@ public class GameManager : MonoBehaviour
     [Header("GAME SETTINGS")]
 
     [Tooltip("Will the high score be recoreded")]
-    public bool recordHighScore = false; //is the High Score recorded
+    public bool recordBestMoves = false; //is best moves recorded
 
     [SerializeField] //Access to private variables in editor
-    private int defaultHighScore = 1000;
-    static public int highScore = 1000; // the default High Score
-    public int HighScore { get { return highScore; } set { highScore = value; } }//access to private variable highScore [get/set methods]
+    private int defaultBestMoves = 100;
+    static public int[] bestMoves; // the default best moves
+    public int BestMoves { get { return bestMoves[SceneManager.GetActiveScene().buildIndex]; } set { bestMoves[SceneManager.GetActiveScene().buildIndex] = value; } } //access to private variable best moves [get/set methods]
 
     [Space(10)]
-    
-    //static vairables can not be updated in the inspector, however private serialized fileds can be
-    [SerializeField] //Access to private variables in editor
-    private int numberOfLives; //set number of lives in the inspector
-    static public int lives; // number of lives for player 
-    public int Lives { get { return lives; } set { lives = value; } }//access to private variable died [get/set methods]
 
-    static public int score;  //score value
-    public int Score { get { return score; } set { score = value; } }//access to private variable died [get/set methods]
-
-    [SerializeField] //Access to private variables in editor
-    [Tooltip("Check to test player lost the level")]
-    private bool levelLost = false;//we have lost the level (ie. player died)
-    public bool LevelLost { get { return levelLost; } set { levelLost = value; } } //access to private variable lostLevel [get/set methods]
+    static public int moves;  //score value
+    public int Moves { get { return moves; } set { moves = value; } }//access to private variable moves [get/set methods]
 
     [Space(10)]
-    public string defaultEndMessage = "Game Over";//the end screen message, depends on winning outcome
-    public string looseMessage = "You Loose"; //Message if player looses
-    public string winMessage = "You Win"; //Message if player wins
+
+    public string winMessage = "You Win!"; //Message if player wins
     [HideInInspector] public string endMsg ;//the end screen message, depends on winning outcome
 
     [Header("SCENE SETTINGS")]
@@ -108,7 +96,7 @@ public class GameManager : MonoBehaviour
 
     //Win/Loose conditon
     [SerializeField] //to test in inspector
-    private bool playerWon = false;
+    private bool playerWon = true;
  
    //reference to system time
    private static string thisDay = System.DateTime.Now.ToString("yyyy"); //today's date as string
@@ -124,9 +112,12 @@ public class GameManager : MonoBehaviour
 
         //store the current scene
         currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        //create the best moves array with an index for each scene
+        bestMoves = new int[gameLevels.Length + 2];
         
-        //Get the saved high score
-        GetHighScore();
+        //Get the saved best moves
+        GetBestMoves();
 
     }//end Awake()
 
@@ -136,20 +127,20 @@ public class GameManager : MonoBehaviour
     {
         //if ESC is pressed , exit game
         if (Input.GetKey("escape")) { ExitGame(); }
+
+        // if R is pressed, restart the room
+        if (Input.GetKey("r"))
+        {
+            moves = 0;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         
         //Check for next level
         if (nextLevel) { NextLevel(); }
 
-        //if we are playing the game
-        if (gameState == gameStates.Playing)
-        {
-            //if we have died and have no more lives, go to game over
-            if (levelLost && (lives == 0)) { GameOver(); }
-
-        }//end if (gameState == gameStates.Playing)
-
         //Check Score
-        CheckScore();
+        //CheckMoves();
+
 
     }//end Update
 
@@ -161,15 +152,19 @@ public class GameManager : MonoBehaviour
 
         gameLevelsCount = 1; //set the count for the game levels
         loadLevel = gameLevelsCount - 1; //the level from the array
-        SceneManager.LoadScene(gameLevels[loadLevel]); //load first game level
+        if (!nextLevel)
+        {
+            SceneManager.LoadScene(gameLevels[loadLevel]); //load first game level
+            PlayerPrefs.SetInt("Current Level", gameLevelsCount);
+        }
 
         gameState = gameStates.Playing; //set the game state to playing
 
-        lives = numberOfLives; //set the number of lives
-        score = 0; //set starting score
+        moves = 0; //set starting score
 
+        /*
         //set High Score
-        if (recordHighScore) //if we are recording highscore
+        if (recordBestMoves) //if we are recording highscore
         {
             //if the high score, is less than the default high score
             if (highScore <= defaultHighScore)
@@ -177,11 +172,12 @@ public class GameManager : MonoBehaviour
                 highScore = defaultHighScore; //set the high score to defulat
                 PlayerPrefs.SetInt("HighScore", highScore); //update high score PlayerPref
             }//end if (highScore <= defaultHighScore)
-        }//end  if (recordHighScore) 
+        }//end  if (recordHighScore)
+        */
 
-        endMsg = defaultEndMessage; //set the end message default
+        endMsg = winMessage; //set the end message default
 
-        playerWon = false; //set player winning condition to false
+        playerWon = true; //set player winning condition to false
     }//end StartGame()
 
 
@@ -199,7 +195,7 @@ public class GameManager : MonoBehaviour
     {
         gameState = gameStates.GameOver; //set the game state to gameOver
 
-       if(playerWon) { endMsg = winMessage; } else { endMsg = looseMessage; } //set the end message
+       //if(playerWon) { endMsg = winMessage; } else { endMsg = looseMessage; } //set the end message
 
         SceneManager.LoadScene(gameOverScene); //load the game over scene
         Debug.Log("Gameover");
@@ -207,15 +203,23 @@ public class GameManager : MonoBehaviour
     
     
     //GO TO THE NEXT LEVEL
-        void NextLevel()
+    public void NextLevel()
     {
+        if (!nextLevel)
+        {
+            CheckMoves(); // update best moves if necessary
+        }
         nextLevel = false; //reset the next level
+        moves = 0;
 
         //as long as our level count is not more than the amount of levels
         if (gameLevelsCount < gameLevels.Length)
         {
             gameLevelsCount++; //add to level count for next level
             loadLevel = gameLevelsCount - 1; //find the next level in the array
+            PlayerPrefs.SetInt("Current Level", gameLevelsCount);
+            Debug.Log(loadLevel);
+            Debug.Log(gameLevels[loadLevel]);
             SceneManager.LoadScene(gameLevels[loadLevel]); //load next level
 
         }else{ //if we have run out of levels go to game over
@@ -224,29 +228,49 @@ public class GameManager : MonoBehaviour
 
     }//end NextLevel()
 
-    void CheckScore()
+    // LOAD A PARTICULAR LEVEL
+    public void LoadGame()
+    {
+        nextLevel = true;
+        StartGame();
+        gameLevelsCount = PlayerPrefs.GetInt("Current Level") - 1;
+        NextLevel();
+    }
+
+    void CheckMoves()
     { //This method manages the score on update. Right now it just checks if we are greater than the high score.
   
         //if the score is more than the high score
-        if (score > highScore)
+        if (moves < BestMoves)
         { 
-            highScore = score; //set the high score to the current score
-           PlayerPrefs.SetInt("HighScore", highScore); //set the playerPref for the high score
+            BestMoves = moves; //set the best moves to current moves
+            PlayerPrefs.SetInt("BestMoves Scene " + SceneManager.GetActiveScene().buildIndex, BestMoves); //set the playerPref for best moves in that scene
         }//end if(score > highScore)
 
-    }//end CheckScore()
+    }//end CheckMoves()
 
-    void GetHighScore()
+    void GetBestMoves()
     {//Get the saved highscore
- 
-        //if the PlayerPref alredy exists for the high score
-        if (PlayerPrefs.HasKey("HighScore"))
-        {
-            Debug.Log("Has Key");
-            highScore = PlayerPrefs.GetInt("HighScore"); //set the high score to the saved high score
-        }//end if (PlayerPrefs.HasKey("HighScore"))
 
-        PlayerPrefs.SetInt("HighScore", highScore); //set the playerPref for the high score
-    }//end GetHighScore()
+        for (int i = 0; i < bestMoves.Length; i++)
+        {
+            //if the PlayerPref alredy exists for the high score
+            if (PlayerPrefs.HasKey("BestMoves Scene " + i))
+            {
+                //Debug.Log("Has Key");
+                bestMoves[i] = PlayerPrefs.GetInt("BestMoves Scene " + i); //set the high score to the saved high score
+                if (bestMoves[i] == 0)
+                {
+                    PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves); //set the playerPref to default best moves
+                    bestMoves[i] = defaultBestMoves;
+                }
+            }//end if (PlayerPrefs.HasKey("HighScore"))
+            else
+            {
+                PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves); //set the playerPref to default best moves
+                bestMoves[i] = defaultBestMoves;
+            }
+        }
+    }//end GetBestMoves()
 
 }

@@ -275,6 +275,7 @@ public class PlayerCore : PlayerBlock
         {
             blk.moving = true;
         }
+        if (Mathf.Abs(targetX - transform.position.x) > 0.05f || Mathf.Abs(targetY - transform.position.y) > 0.05f) gm.Moves++; // add a move if the player is actually moving a distance
     }
 
     public void magnetMove()

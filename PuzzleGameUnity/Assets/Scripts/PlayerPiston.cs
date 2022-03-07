@@ -99,7 +99,11 @@ public class PlayerPiston : PlayerBlock
                 }
                 else // otherwise attempt to push off of the wall
                 {
-                    if (core.pistonMoveStart(-pistonDirectionVector)) pistonMoveArmStart();
+                    if (core.pistonMoveStart(-pistonDirectionVector))
+                    {
+                        pistonMoveArmStart();
+                        gm.Moves++; // add a move
+                    }
                     else // if the player is blocked, don't extend the piston
                     {
                         extension--;
@@ -129,6 +133,7 @@ public class PlayerPiston : PlayerBlock
         targetPos = armParent.transform.localPosition + pistonDirectionVector * manager.blockSize;
         core.freezeBlocks(true);
         extending = true;
+        gm.Moves++; // add a move
     }
     public void pistonExtend()
     {
@@ -141,6 +146,7 @@ public class PlayerPiston : PlayerBlock
         targetPos = armParent.transform.localPosition - pistonDirectionVector * manager.blockSize;
         core.freezeBlocks(true);
         retracting = true;
+        gm.Moves++; // add a move
     }
 
     public void pistonRetract()

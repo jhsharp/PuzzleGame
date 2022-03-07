@@ -15,6 +15,7 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     internal BlockManager manager;
+    internal GameManager gm; //reference to game manager
 
     public string type;
     public bool fixedPosition = true;
@@ -33,7 +34,10 @@ public class Block : MonoBehaviour
     // Start is called before the first frame update
     internal void Start()
     {
+        // Get references to block manager and game manager
         manager = FindObjectOfType<BlockManager>();
+        gm = GameManager.GM;
+
         x = (int)Mathf.Floor((transform.position.x - manager.transform.position.x) / manager.blockSize);
         y = (int)Mathf.Floor((transform.position.y - manager.transform.position.y) / manager.blockSize);
     }
