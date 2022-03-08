@@ -3,7 +3,7 @@
  * Date Created: January 30, 2022
  * 
  * Last Edited by: Jacob Sharp
- * Date Last Edited: March 4, 2022
+ * Date Last Edited: March 7, 2022
  * 
  * Description: Block type that manages all other player blocks
  ****/
@@ -82,7 +82,10 @@ public class PlayerCore : PlayerBlock
     {
         foreach (PlayerBlock blk in playerBlocks) // check for currently connected blocks
         {
-            if (manager.checkBlock(blk.x + xShift, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift).type != "player") return true; // check the target location of each block for a collision
+            if (manager.checkBlock(blk.x + xShift, blk.y + yShift) != null && manager.checkBlock(blk.x + xShift, blk.y + yShift).type != "player") // check the target location of each block for a collision
+            {
+                return true; 
+            }
             if (blk.gameObject.GetComponent<PlayerPiston>() != null) // check for piston arm collisions
             {
                 PlayerPiston piston = (PlayerPiston)blk;
@@ -156,7 +159,8 @@ public class PlayerCore : PlayerBlock
             {
                 currentConnection = (PlayerBlock)checkBlock;
                 tempConnections.Add(currentConnection); // add the block to the connection list
-                currentConnection.tempOffset = yShift; // set its offset based on how far it currently is from the player
+                if (yShift != 0) currentConnection.tempOffset = yShift; // set its offset based on how far it currently is from the player
+                else currentConnection.tempOffset = xShift;
             }
         }
     }
@@ -193,7 +197,7 @@ public class PlayerCore : PlayerBlock
             // Attach blocks that are immediately in a player block's path of motion
             foreach (PlayerBlock attachment in tempConnections)
             {
-                if (!newBlocks.Contains(attachment) && (Mathf.Abs(blk.transform.position.x - attachment.transform.position.x) <= (moveDirection.x*(manager.blockSize + currentSpeed * Time.deltaTime) + 0.001)) && (Mathf.Abs(blk.transform.position.y - attachment.transform.position.y) <= (moveDirection.y * (manager.blockSize + currentSpeed * Time.deltaTime) + 0.001)))
+                if (!newBlocks.Contains(attachment) && (Mathf.Abs(blk.transform.position.x - attachment.transform.position.x) <= Mathf.Abs((moveDirection.x*(manager.blockSize + currentSpeed * Time.deltaTime) + 0.001f))) && (Mathf.Abs(blk.transform.position.y - attachment.transform.position.y) <= Mathf.Abs(moveDirection.y * (manager.blockSize + currentSpeed * Time.deltaTime) + 0.001f)))
                 {
                     newBlocks.Add(attachment);
                     attachment.tempOffset = 0;
