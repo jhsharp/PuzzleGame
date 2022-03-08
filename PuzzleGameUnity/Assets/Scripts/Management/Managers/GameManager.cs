@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         //if ESC is pressed , exit game
-        if (Input.GetKey("escape")) { ExitGame(); }
+        //if (Input.GetKey("escape")) { ExitGame(); }
 
         // if R is pressed, restart the room
         if (Input.GetKey("r"))
