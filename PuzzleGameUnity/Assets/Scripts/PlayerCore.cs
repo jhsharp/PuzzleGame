@@ -53,9 +53,12 @@ public class PlayerCore : PlayerBlock
             attachBlocks();
             initialAttach--;
         }
+    }
 
+    private void FixedUpdate()
+    {
         // Continue moving if there is still distance for the player to travel while moving
-        if ((targetX - transform.position.x) * moveDirectionSign > moveBuffer  || (targetY - transform.position.y) * moveDirectionSign > moveBuffer) 
+        if ((targetX - transform.position.x) * moveDirectionSign > moveBuffer || (targetY - transform.position.y) * moveDirectionSign > moveBuffer)
         {
             if (moveType == "magnet") magnetMove();
             else if (moveType == "piston") pistonMove();

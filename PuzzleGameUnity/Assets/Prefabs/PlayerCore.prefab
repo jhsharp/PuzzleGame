@@ -105,8 +105,8 @@ MonoBehaviour:
   tempOffset: 0
   playerBlocks: []
   tempConnections: []
-  magnetMoveMultiplier: 1.007
-  magnetMoveSpeed: 0.5
+  magnetMoveMultiplier: 1.01
+  magnetMoveSpeed: 1.25
   pistonMoveSpeed: 1.5
 --- !u!61 &4301149998731524590
 BoxCollider2D:
