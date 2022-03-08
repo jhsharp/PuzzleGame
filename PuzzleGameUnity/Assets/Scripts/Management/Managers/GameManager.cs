@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     public bool recordBestMoves = false; //is best moves recorded
 
     [SerializeField] //Access to private variables in editor
-    private int defaultBestMoves = 100;
+    private int[] defaultBestMoves = new int[] {0, 9, 12, 41, 32, 41, 26, 39, 40, 0};
     static public int[] bestMoves; // the default best moves
     public int BestMoves { get { return bestMoves[SceneManager.GetActiveScene().buildIndex]; } set { bestMoves[SceneManager.GetActiveScene().buildIndex] = value; } } //access to private variable best moves [get/set methods]
 
@@ -261,14 +261,14 @@ public class GameManager : MonoBehaviour
                 bestMoves[i] = PlayerPrefs.GetInt("BestMoves Scene " + i); //set the high score to the saved high score
                 if (bestMoves[i] == 0)
                 {
-                    PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves); //set the playerPref to default best moves
-                    bestMoves[i] = defaultBestMoves;
+                    PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves[i]); //set the playerPref to default best moves
+                    bestMoves[i] = defaultBestMoves[i];
                 }
             }//end if (PlayerPrefs.HasKey("HighScore"))
             else
             {
-                PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves); //set the playerPref to default best moves
-                bestMoves[i] = defaultBestMoves;
+                PlayerPrefs.SetInt("BestMoves Scene " + i, defaultBestMoves[i]); //set the playerPref to default best moves
+                bestMoves[i] = defaultBestMoves[i];
             }
         }
     }//end GetBestMoves()

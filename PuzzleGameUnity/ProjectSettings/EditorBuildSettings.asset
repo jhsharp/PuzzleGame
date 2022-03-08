@@ -9,11 +9,29 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu Scenes/start_scene.unity
     guid: 950eb5b64988172409c245cf5588095e
   - enabled: 1
-    path: Assets/Scenes/Level_Hard.unity
-    guid: fa8d727d16629554eb90975f7cb826bc
+    path: Assets/Scenes/Level_1.unity
+    guid: a0c3b6b7a5ec0f141ad1374751930f7d
   - enabled: 1
-    path: Assets/Scenes/DemoScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Level_2.unity
+    guid: 5b95a049fdd56974ea752f33354df843
+  - enabled: 1
+    path: Assets/Scenes/Level_3.unity
+    guid: 15ee9c6957c16454ab59a46a7b0273b8
+  - enabled: 1
+    path: Assets/Scenes/Level_4.unity
+    guid: 03bad67e1fe1acf409f0763d5183b9fd
+  - enabled: 1
+    path: Assets/Scenes/Level_5.unity
+    guid: d945a87e9d986fd498213b3cbe7099a3
+  - enabled: 1
+    path: Assets/Scenes/Level_6.unity
+    guid: 01c1b3896c489424f8902f11ae1656cd
+  - enabled: 1
+    path: Assets/Scenes/Level_7.unity
+    guid: 30c7a21faef12b944a11f089d829120c
+  - enabled: 1
+    path: Assets/Scenes/Level_8.unity
+    guid: fa8d727d16629554eb90975f7cb826bc
   - enabled: 1
     path: Assets/Scenes/Menu Scenes/end_scene.unity
     guid: bc32eb117b0fba6428d47afd7e20af10

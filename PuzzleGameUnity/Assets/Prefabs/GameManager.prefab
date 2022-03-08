@@ -53,8 +53,14 @@ MonoBehaviour:
   startScene: start_scene
   gameOverScene: end_scene
   gameLevels:
-  - Level_Hard
-  - DemoScene
+  - Level_1
+  - Level_2
+  - Level_3
+  - Level_4
+  - Level_5
+  - Level_6
+  - Level_7
+  - Level_8
   gameLevelsCount: 0
   nextLevel: 0
   gameState: 0

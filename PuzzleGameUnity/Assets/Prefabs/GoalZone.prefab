@@ -122,5 +122,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b903cb7a02714429bc25b95ae0b235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextScene: 
-  transitionDelay: 1
+  transitionDelay: 0.5
